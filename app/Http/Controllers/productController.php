@@ -40,7 +40,7 @@ class productController extends Controller
             $imageName = str::random(32).".".$request->image->getClientOriginalExtension();
 
             // Create Product
-            product::create([
+           $productes =  product::create([
                 'name' => $request->name,
                 'image' => $imageName,
                 'description' => $request->description
@@ -51,7 +51,9 @@ class productController extends Controller
 
             // Return Json Response
             return response()->json([
-                'message' => "Product successfully created."
+                'message' => "Product successfully created.",
+                'product' => $productes,
+                'status' => 200
             ],200);
 
         } catch (\Exception $e) {
@@ -94,6 +96,7 @@ class productController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        // dd($request->all());
         try {
             // Find product
             $product = Product::find($id);
@@ -127,12 +130,14 @@ class productController extends Controller
 
             // Return Json Response
             return response()->json([
-                'message' => "Product successfully updated."
+                'message' => "Product successfully updated.",
+                'product' => $product
             ],200);
         } catch (\Exception $e) {
             // Return Json Response
             return response()->json([
-                'message' => "Something went really wrong!"
+                'message' => "Something went really wrong!". $e->getMessage(),
+                'errores' => $request->name
             ],500);
         }
     }
@@ -161,7 +166,8 @@ class productController extends Controller
 
         // Return Json Response
         return response()->json([
-            'message' => "Product successfully deleted."
+            'message' => "Product successfully deleted.",
+            'status' => 200
         ],200);
 
     }
